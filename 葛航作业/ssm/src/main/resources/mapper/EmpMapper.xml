@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoshu.dao.EmpMapper">
+ 	<select id="findAll" parameterType="empVo" resultType="empVo">
+ 		SELECT 
+			e.*,
+			d.name dname,
+			c1.name cname1,
+			c2.name cname2,
+			c3.name cname3
+		FROM
+			tb_emp e,
+			dept d,
+			city c1,
+			city c2,
+			city c3
+		<where>
+			e.`tb_emp_did`=d.`id` AND
+			c1.`id`=e.`tb_emp_shengid` AND
+			c2.`id`=e.`tb_emp_sid` AND
+			c3.`id`=e.`tb_emp_xid`
+			 <if test="tbEmpName!=null and tbEmpName!=''">
+				and e.tb_emp_name like '%${tbEmpName}%'
+			 </if>
+			 <if test="tbEmpSex!=null">
+			 	and e.tb_emp_sex = #{tbEmpSex}
+			 </if>
+			 <if test="age1!=null">
+			 	and e.tb_emp_age &gt;=#{age1}
+			 </if>
+			 <if test="age2!=null">
+			 	and e.tb_emp_age &lt;=#{age2}
+			 </if>
+			 <if test="birthday1!=null">
+			 	and e.tb_emp_birthday &gt;=#{birthday1}
+			 </if>
+			 <if test="birthday2!=null">
+			 	and e.tb_emp_birthday &lt;=#{birthday2}
+			 </if>
+			 <if test="tbEmpDid!=null and tbEmpDid!=0">
+			 	and e.tb_emp_did = #{tbEmpDid}
+			 </if>
+		</where>
+ 	</select>
+ 	<select id="findEcharts" resultType="empVo">
+ 		select count(e.tb_emp_id) as num,d.name as dname
+ 		from tb_emp e,dept d where e.tb_emp_did=d.id
+ 		group by d.name
+ 	</select>
+</mapper>
